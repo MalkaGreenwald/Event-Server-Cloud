@@ -129,5 +129,22 @@ namespace Entities
             }
 
         }
+        public static bool RemoveAll()
+        {
+            try
+            {
+                var connection = new MySqlConnection(con);
+                connection.Open();
+                MySqlCommand cmd = connection.CreateCommand();
+                cmd.CommandText = "TRUNCATE TABLE Images";
+                cmd.ExecuteNonQuery();
+                connection.Close();
+                return true;
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+        }
     }
 }

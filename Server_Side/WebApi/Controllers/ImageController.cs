@@ -43,6 +43,12 @@ namespace WebApi.Controllers
         {
             return Ok(Images.DeleteImg(img.url));
         }
+        [Route("UndoDelete")]
+        [HttpPost]
+        public IHttpActionResult UndoDelete(ImageEntity img)
+        {
+            return Ok(Images.UndoDelete(img.url));
+        }
 
         [Route("getRecycleBin")]
         [HttpGet]
@@ -56,6 +62,13 @@ namespace WebApi.Controllers
         public IHttpActionResult HasGroom()
         {
             return Ok(Images.HasGroom());
+        }
+
+        [Route("Reset")]
+        [HttpGet]
+        public IHttpActionResult Reset()
+        {
+            return Ok(Images.Reset());
         }
 
     }

@@ -59,6 +59,29 @@ namespace BL
             }
         }
 
+        public static WebResult<bool> UndoDelete(string url)
+        {
+            try
+            {
+                ImageEntity.UpdateRecycleBin(url, false);
+                return new WebResult<bool>()
+                {
+                    Status = true,
+                    Message = "Ok",
+                    Value = true
+                };
+            }
+            catch (Exception e)
+            {
+                return new WebResult<bool>()
+                {
+                    Status = false,
+                    Message = e.Message,
+                    Value = false
+                };
+            }
+        }
+
         public static WebResult<List<ImageEntity>> getRecycleBin()
         {
             try
@@ -81,6 +104,31 @@ namespace BL
                 };
             }
         }
+
+        public static WebResult<bool> Reset()
+        {
+            try
+            {
+                ImageEntity.RemoveAll();
+                GroomEntity.RemoveAll();
+                return new WebResult<bool>()
+                {
+                    Status = true,
+                    Message = "Ok",
+                    Value = true
+                };
+            }
+            catch (Exception e)
+            {
+                return new WebResult<bool>()
+                {
+                    Status = false,
+                    Message = e.Message,
+                    Value = false
+                };
+            }
+        }
+
         public static WebResult<bool> HasGroom()
         {
             try
