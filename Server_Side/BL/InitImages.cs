@@ -34,7 +34,7 @@ namespace BL
         {
             try
             {
-                Environment.SetEnvironmentVariable("GOOGLE_APPLICATION_CREDENTIALS",HttpContext.Current.Server.MapPath("/Keys/My First Project-b781c7f56bda.json"));
+                Environment.SetEnvironmentVariable("GOOGLE_APPLICATION_CREDENTIALS", HttpContext.Current.Server.MapPath("/Keys/My First Project-b781c7f56bda.json"));
                 string bucketName = "bucketmyexample";
                 string imageURL = "https://storage.googleapis.com/bucketmyexample/" + fileName;
                 StorageClient storage = StorageClient.Create();
@@ -56,9 +56,10 @@ namespace BL
                 var res = await clarifaiClient.PublicModels.GeneralModel
                 .Predict(new ClarifaiURLImage(fileUrl))
                 .ExecuteAsync();
+                var r = res;
                 return res.Get().Data;
             }
-            catch (Exception)
+            catch (Exception e)
             {
                 return null;
             }
@@ -108,29 +109,22 @@ namespace BL
                         {
                             uploaded_image = SendToStorage(postedFile.FileName, postedFile.InputStream);
                             bool s = true;
-                            tasks.Add(Task.Run(async () =>
+                            try
                             {
-                                try
-                                {
-                                    var suc = await InitImageDetailsAsync(uploaded_image, postedFile.FileName);
-                                }
-                                catch (Exception)
-                                {
-                                    s = false;
-                                }
-                                
-                            }));
+                                var suc = await InitImageDetailsAsync(uploaded_image, postedFile.FileName);
+                            }
+                            catch (Exception)
+                            {
+                                s = false;
+                                throw;
+                            }
 
-                        }
-                    }
-                    Task t = Task.WhenAll(tasks.ToArray());
-                    try
-                    {
-                        await t;
-                    }
-                    catch { }
+                        };
 
+                    }
                 }
+
+
                 images = Images.GetImages().Value;
                 if (images == null)
                 {

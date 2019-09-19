@@ -85,7 +85,7 @@ namespace BL
         {
             try
             {
-                if (GroomEntity.Get().ToList().Count == 0)
+                if (GroomEntity.Get().Count == 0)
                     return new WebResult<bool>()
                     {
                         Status=true,

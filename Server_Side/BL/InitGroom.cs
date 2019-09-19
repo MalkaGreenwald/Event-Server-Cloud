@@ -73,8 +73,8 @@ namespace BL
                         {
                             Status = true,
                             Message = "Ok",
-                            Value = images
-                        };
+                            Value = Images.GetImages().Value
+                    };
                     }
                 }
 
