@@ -11,6 +11,7 @@ using System.Web.Http;
 using System.Web.Http.Cors;
 //using System.Web.Mvc;
 using Entities;
+using WebApi.Models;
 
 namespace WebApi.Controllers
 {
@@ -20,18 +21,21 @@ namespace WebApi.Controllers
     {
         [Route("InsertImages")]
         [HttpPost]
+        [RequireHttps]
         public async Task<IHttpActionResult> InsertImages()
         {
             return Ok(await InitImages.InsertImages());
         }
         [Route("GetImages")]
         [HttpGet]
+        [RequireHttps]
         public IHttpActionResult GetImages()
         {
             return Ok(Images.GetImages());
         }
         [Route("InsertGroom")]
         [HttpPost]
+        [RequireHttps]
         public IHttpActionResult InsertImagesGroom()
         {
             return Ok(InitGroom.InsertGroom());
@@ -39,6 +43,7 @@ namespace WebApi.Controllers
 
         [Route("DeleteImage")]
         [HttpPost]
+        [RequireHttps]
         public IHttpActionResult DeleteImage(ImageEntity img)
         {
             return Ok(Images.DeleteImg(img.url));
@@ -46,6 +51,7 @@ namespace WebApi.Controllers
 
         [Route("getRecycleBin")]
         [HttpGet]
+        [RequireHttps]
         public IHttpActionResult GetRecycleBin()
         {
             return Ok(Images.getRecycleBin());
@@ -53,6 +59,7 @@ namespace WebApi.Controllers
 
         [Route("HasGroom")]
         [HttpGet]
+        [RequireHttps]
         public IHttpActionResult HasGroom()
         {
             return Ok(Images.HasGroom());
