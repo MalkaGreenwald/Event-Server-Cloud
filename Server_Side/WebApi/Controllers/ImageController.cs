@@ -22,9 +22,9 @@ namespace WebApi.Controllers
         [Route("InsertImages")]
         [HttpPost]
         [RequireHttps]
-        public async Task<IHttpActionResult> InsertImages()
+        public async Task<IHttpActionResult> InsertImages([FromBody]List<string> base64arr)
         {
-            return Ok(await InitImages.InsertImages());
+            return Ok(await InitImages.InsertImages(base64arr));
         }
         [Route("GetImages")]
         [HttpGet]

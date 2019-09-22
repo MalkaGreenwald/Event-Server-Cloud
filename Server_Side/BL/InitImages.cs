@@ -16,6 +16,7 @@ using Google.Cloud.Vision.V1;
 using Google.Cloud.Storage.V1;
 using Entities;
 using RestSharp;
+using System.Text.RegularExpressions;
 
 namespace BL
 {
@@ -86,42 +87,40 @@ namespace BL
                 return null;
             }
         }
-        public static async Task<WebResult<List<ImageEntity>>> InsertImages()
+        public static async Task<WebResult<List<ImageEntity>>> InsertImages(List<String> base64arr)
         {
             try
             {
-                HttpResponseMessage response = new HttpResponseMessage();
-                var httpRequest = HttpContext.Current.Request;
+                //HttpResponseMessage response = new HttpResponseMessage();
+                //var httpRequest = HttpContext.Current.Request;
                 string uploaded_image;
                 List<ImageEntity> images;
-                if (httpRequest.Files.Count > 0)
+                if (base64arr.Count > 0)
                 {
-                    var tasks = new List<Task>();
-                    for (var i = 0; i < httpRequest.Files.Count; i++)
+                    
+                    for (var i = 0; i < base64arr.Count; i+=2)
                     {
-                        var postedFile = httpRequest.Files[i];
-                        if (string.Equals(postedFile.ContentType, "image/jpg", StringComparison.OrdinalIgnoreCase) ||
-                string.Equals(postedFile.ContentType, "image/jpeg", StringComparison.OrdinalIgnoreCase) ||
-                string.Equals(postedFile.ContentType, "image/pjpeg", StringComparison.OrdinalIgnoreCase) ||
-                string.Equals(postedFile.ContentType, "image/gif", StringComparison.OrdinalIgnoreCase) ||
-                string.Equals(postedFile.ContentType, "image/x-png", StringComparison.OrdinalIgnoreCase) ||
-                string.Equals(postedFile.ContentType, "image/png", StringComparison.OrdinalIgnoreCase))
+                        //var postedFile = httpRequest.Files[i];
+
+                        var base64 = Regex.Replace(base64arr[i], @"^data:image\/[a-zA-Z]+;base64,", string.Empty);
+                        byte[] byteArray = System.Convert.FromBase64String(base64);
+                        MemoryStream stream = new MemoryStream(byteArray);
+                        
+                        uploaded_image = SendToStorage(base64arr[i + 1], stream);
+                        bool s = true;
+                        try
                         {
-                            uploaded_image = SendToStorage(postedFile.FileName, postedFile.InputStream);
-                            bool s = true;
-                            try
-                            {
-                                var suc = await InitImageDetailsAsync(uploaded_image, postedFile.FileName);
-                            }
-                            catch (Exception)
-                            {
-                                s = false;
-                                throw;
-                            }
+                            var suc = await InitImageDetailsAsync(uploaded_image, base64arr[i + 1]);
+                        }
+                        catch (Exception)
+                        {
+                            s = false;
+                            throw;
+                        }
 
-                        };
+                    };
 
-                    }
+
                 }
 
 
