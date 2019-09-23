@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Net.Http;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Web;
 using BL.Helpers;
@@ -15,68 +16,60 @@ namespace BL
 {
     public class InitGroom
     {
-        public static WebResult<List<ImageEntity>> InsertGroom()
+        public static WebResult<List<ImageEntity>> InsertGroom(List<String> base64arr)
         {
 
             List<ImageEntity> images = null;
             try
             {
-                HttpResponseMessage response = new HttpResponseMessage();
-                var httpRequest = HttpContext.Current.Request;
                 images = Images.GetImages().Value;
-                if (httpRequest.Files.Count == 1)
+                if (base64arr.Count == 2)
                 {
-
-                    var postedFile = httpRequest.Files[0];
-                    if (string.Equals(postedFile.ContentType, "image/jpg", StringComparison.OrdinalIgnoreCase) ||
-                string.Equals(postedFile.ContentType, "image/jpeg", StringComparison.OrdinalIgnoreCase) ||
-                string.Equals(postedFile.ContentType, "image/pjpeg", StringComparison.OrdinalIgnoreCase) ||
-                string.Equals(postedFile.ContentType, "image/gif", StringComparison.OrdinalIgnoreCase) ||
-                string.Equals(postedFile.ContentType, "image/x-png", StringComparison.OrdinalIgnoreCase) ||
-                string.Equals(postedFile.ContentType, "image/png", StringComparison.OrdinalIgnoreCase))
-                    {
-                        string urlStorage = InitImages.SendToStorage(postedFile.FileName, postedFile.InputStream);
-                        if (urlStorage == "")
-                            return new WebResult<List<ImageEntity>>()
-                            {
-                                Status = false,
-                                Message = "failed to load image",
-                                Value = images
-                            };
-                        GroomEntity groom = new GroomEntity();
-                        groom.url = urlStorage;
-                        string token = getFaceToken(urlStorage);
-                        if (token == "")
-                            return new WebResult<List<ImageEntity>>()
-                            {
-                                Status = false,
-                                Message = "failed",
-                                Value = images
-                            };
-                        groom.token = token;
-                        groom.name = postedFile.FileName;
-                        if (GroomEntity.Get().ToList().Count > 0)
+                    var base64 = Regex.Replace(base64arr[0], @"^data:image\/[a-zA-Z]+;base64,", string.Empty);
+                    byte[] byteArray = System.Convert.FromBase64String(base64);
+                    MemoryStream stream = new MemoryStream(byteArray);
+                    string urlStorage = InitImages.SendToStorage(base64arr[1], stream);
+                    if (urlStorage == "")
+                        return new WebResult<List<ImageEntity>>()
                         {
-                            GroomEntity.RemoveAll();
-                            groom.Add();
-                            InitImagesAfterChangeGroom();
-                            images = Images.GetImages().Value;
-                            return new WebResult<List<ImageEntity>>()
-                            {
-                                Status = true,
-                                Message = "Ok",
-                                Value = images
-                            };
-                        }
+                            Status = false,
+                            Message = "failed to load image",
+                            Value = images
+                        };
+                    GroomEntity groom = new GroomEntity();
+                    groom.url = urlStorage;
+                    string token = getFaceToken(urlStorage);
+                    if (token == "")
+                        return new WebResult<List<ImageEntity>>()
+                        {
+                            Status = false,
+                            Message = "failed",
+                            Value = images
+                        };
+                    groom.token = token;
+                    groom.name = base64arr[1];
+                    if (GroomEntity.Get().ToList().Count > 0)
+                    {
+                        GroomEntity.RemoveAll();
                         groom.Add();
+                        InitImagesAfterChangeGroom();
+                        images = Images.GetImages().Value;
                         return new WebResult<List<ImageEntity>>()
                         {
                             Status = true,
                             Message = "Ok",
-                            Value = Images.GetImages().Value
-                    };
+                            Value = images
+                        };
                     }
+                    groom.Add();
+                    return new WebResult<List<ImageEntity>>()
+                    {
+                        Status = true,
+                        Message = "Ok",
+                        Value = Images.GetImages().Value
+                    };
                 }
+
 
                 return new WebResult<List<ImageEntity>>()
                 {

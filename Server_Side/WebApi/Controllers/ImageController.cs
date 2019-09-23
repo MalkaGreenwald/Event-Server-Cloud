@@ -21,35 +21,36 @@ namespace WebApi.Controllers
     {
         [Route("InsertImages")]
         [HttpPost]
-        [RequireHttps]
-        public async Task<IHttpActionResult> InsertImages([FromBody]List<string> base64arr)
+        //[RequireHttps]
+        public async Task<IHttpActionResult> InsertImages([FromBody]List<String> base64arr)
         {
-            return Ok(await InitImages.InsertImages(base64arr));
+                    return Ok(await InitImages.InsertImages(base64arr));
         }
         [Route("GetImages")]
         [HttpGet]
-        [RequireHttps]
+        //[RequireHttps]
         public IHttpActionResult GetImages()
         {
             return Ok(Images.GetImages());
         }
         [Route("InsertGroom")]
         [HttpPost]
-        [RequireHttps]
-        public IHttpActionResult InsertImagesGroom()
+        //[RequireHttps]
+        public IHttpActionResult InsertImagesGroom(List<String> base64arr)
         {
-            return Ok(InitGroom.InsertGroom());
+            return Ok(InitGroom.InsertGroom(base64arr));
         }
 
         [Route("DeleteImage")]
         [HttpPost]
-        [RequireHttps]
+        //[RequireHttps]
         public IHttpActionResult DeleteImage(ImageEntity img)
         {
             return Ok(Images.DeleteImg(img.url));
         }
         [Route("UndoDelete")]
         [HttpPost]
+        //[RequireHttps]
         public IHttpActionResult UndoDelete(ImageEntity img)
         {
             return Ok(Images.UndoDelete(img.url));
@@ -57,7 +58,7 @@ namespace WebApi.Controllers
 
         [Route("getRecycleBin")]
         [HttpGet]
-        [RequireHttps]
+        //[RequireHttps]
         public IHttpActionResult GetRecycleBin()
         {
             return Ok(Images.getRecycleBin());
@@ -65,7 +66,7 @@ namespace WebApi.Controllers
 
         [Route("HasGroom")]
         [HttpGet]
-        [RequireHttps]
+        //[RequireHttps]
         public IHttpActionResult HasGroom()
         {
             return Ok(Images.HasGroom());
@@ -73,6 +74,7 @@ namespace WebApi.Controllers
 
         [Route("Reset")]
         [HttpGet]
+        //[RequireHttps]
         public IHttpActionResult Reset()
         {
             return Ok(Images.Reset());
