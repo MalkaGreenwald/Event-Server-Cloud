@@ -35,7 +35,7 @@ namespace BL
         {
             try
             {
-                Environment.SetEnvironmentVariable("GOOGLE_APPLICATION_CREDENTIALS", HttpContext.Current.Server.MapPath("/Keys/My First Project-b781c7f56bda.json"));
+                Environment.SetEnvironmentVariable("GOOGLE_APPLICATION_CREDENTIALS", HttpContext.Current.Server.MapPath("C:/key/My First Project-b781c7f56bda.json"));
                 string bucketName = "bucketmyexample";
                 string imageURL = "https://storage.googleapis.com/bucketmyexample/" + fileName;
                 StorageClient storage = StorageClient.Create();

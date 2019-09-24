@@ -79,6 +79,12 @@ namespace WebApi.Controllers
         {
             return Ok(Images.Reset());
         }
+        [Route("ElectronDetailsForImage")]
+        [HttpPost]
+        public IHttpActionResult ElectronDetailsForImage(string base64)
+        {
+            return Ok();
+        }
 
     }
 }

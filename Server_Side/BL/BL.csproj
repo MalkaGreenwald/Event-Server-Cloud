@@ -186,6 +186,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Electron.cs" />
     <Compile Include="Helpers\WebResult.cs" />
     <Compile Include="Images.cs" />
     <Compile Include="InitGroom.cs" />

@@ -17,8 +17,8 @@ namespace Entities
             UserID = "root",
             Password = "takeapeek",
             Database = "Event",
-            CertificateFile = HttpContext.Current.Server.MapPath("Keys/client.pfx"),
-            SslCa = HttpContext.Current.Server.MapPath("Keys/server-ca.pem"),
+            CertificateFile = HttpContext.Current.Server.MapPath("C:/key/client.pfx"),
+            SslCa = HttpContext.Current.Server.MapPath("C:/key/server-ca.pem"),
             //SslMode = MySqlSslMode.VerifyCA,
             SslMode = MySqlSslMode.None
         };
